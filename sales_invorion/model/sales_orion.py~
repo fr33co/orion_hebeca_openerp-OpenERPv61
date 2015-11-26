@@ -1,0 +1,325 @@
+# -*- coding: utf-8 -*-
+"""
+Módulo utilizado para adaptar el módulo de ventas de Industrias Diana
+"""
+
+import time
+import netsvc
+from osv import fields, osv
+from tools import config
+from tools.translate import _
+
+class sale_order(osv.osv):
+    _inherit = "sale.order"
+
+    _defaults = {
+        'name':'/',
+    }
+    
+
+    def create(self, cr, uid, values, context=None):
+
+        res = super(sale_order, self).create(cr, uid, values, context)
+        values = {
+            'name':self.pool.get('ir.sequence').get(cr, uid, 'sale.order')
+            }
+        seq = self.write(cr, uid, res, values, context)
+        
+        if not seq:
+            raise osv.except_osv(_('Error!'),_('Hubo error en el proceso de creacion de la secuencia. Contactar el administrador!'))
+    
+        return res
+        
+    def write(self, cr, user, ids, vals, context=None):
+        
+        if vals.get('partner_id',False) and vals.get('pricelist_id',False):
+            so_brow = self.browse(cr,user,ids)
+            if so_brow[0].order_line:
+                raise osv.except_osv(_('Error!'),_('Hubo cambio de cliente y tarifas. Debe: 1ro eliminar las lineas del pedido y luego presionar guardar y editar para realizar el registro!'))
+        
+        record = super(sale_order, self).write(cr, user, ids, vals, context)
+        
+        return record
+    
+    def copy(self, cr, uid, id, defaults, context=None): #Sobreescritura del metodo copy para no permitir duplicar objetos stock_picking
+        raise osv.except_osv(_('Acción Denegada!'),_('No se permite duplicar Pedidos!'))
+        return False
+    
+    def check_limit(self, cr, uid, ids, context={}):
+        if context is None:
+            context = {}
+        
+        ##############################################################################################################
+        #Se verifica si hay lineas en el pedido de venta
+        ##############################################################################################################
+        obj_so_lines = self.pool.get('sale.order.line')
+        so_lines = obj_so_lines.search(cr, uid, [('order_id', '=', ids[0])])
+        
+        if not so_lines:
+            raise osv.except_osv(_('Error !'), _('Por favor ingresar las líneas del pedido de venta antes de continuar!'))
+            return False
+        ###############################################################################################################
+        
+        #lineas del pedido
+        br_so_lines = obj_so_lines.browse(cr, uid, so_lines, context)
+        
+        #############################################################################################################
+        #Se verifica esta asociado el producto en cada linea del pedido
+        #############################################################################################################
+        existe_producto = True
+        for linea in br_so_lines:
+            if not linea.product_id:
+                existe_producto = False
+                break
+        if not existe_producto:
+            raise osv.except_osv(_('Error !'), _('No se puede procesar el pedido. No hay producto asociado en alguna de las lineas.!'))
+            return False
+        #############################################################################################################
+
+        
+        #Se verificar si se forza el cambio de estado
+                
+    def _make_invoice(self, cr, uid, order, lines, context=None):
+        #Sobreescritura del método para crear factura desde orden de venta
+        #con la finalidad de registrar el journal_id asociado a la sucursal (tienda)
+        invoice = super(sale_order, self)._make_invoice(cr, uid, order, lines,  context=context)
+        return True
+    
+    def action_cancel_draft(self, cr, uid, ids, *args):
+        sale_order_cancel_to_draft = super(sale_order, self).action_cancel_draft(cr, uid, ids, args)
+        if sale_order_cancel_to_draft:
+            obj_forzar_presup = self.pool.get('log.forzar.presupuesto')
+            pedido = obj_forzar_presup.search(cr,uid,[('order_id','in',ids)])
+            if pedido:
+                a = obj_forzar_presup.unlink(cr, uid, pedido)
+        
+    
+    def onchange_partner_id(self, cr, uid, ids, part):
+        so_onchange_partner_id = super(sale_order, self).onchange_partner_id( cr, uid, ids, part)
+        address_obj = self.pool.get('res.partner.address')
+        if so_onchange_partner_id['value'].get('partner_order_id',False):
+            #si existe un contacto, verificar si es el unico contacto, de lo contrario asignar False
+            contacto = address_obj.search(cr,uid,[('partner_id','=',part),('type','=','contact')])
+            if len(contacto) > 1:
+                so_onchange_partner_id['value']['partner_order_id'] = False
+                
+        if so_onchange_partner_id['value'].get('partner_shipping_id',False):
+            #si existe un contacto, verificar si es el unico conctacto, de lo contrario asignar False
+            contacto = address_obj.search(cr,uid,[('partner_id','=',part),('type','=','delivery')])
+            if len(contacto) > 1:
+                so_onchange_partner_id['value']['partner_shipping_id'] = False
+  
+        return so_onchange_partner_id
+        
+sale_order()
+
+
+class sale_order_line(osv.osv):
+    _inherit = 'sale.order.line'
+    
+    """ OJO: Debo agregar una columna para el imei y enlazarlos a la factura, a su vez
+    se debe agregar un estado para saber cual esta disponible y cual no debe estar 
+    disponible"""
+    
+    #Validaciones tanto para crear como para actualizar
+    def validaciones_registros(self,values):
+        
+        if values.get('type',False):
+            if values['type'] != 'make_to_stock':
+                raise osv.except_osv(_('Error!'),_('Debe indicar el metodo de abastecimiento desde stock !'))
+
+        return True
+        
+    
+    def create(self, cr, uid, values, context=None):
+        
+        self.validaciones_registros(values)
+
+        res = super(sale_order_line, self).create(cr, uid, values, context)
+        
+        return res
+        
+    def write(self, cr, user, ids, vals, context=None):
+        
+        self.validaciones_registros(vals)
+        
+        record = super(sale_order_line, self).write(cr, user, ids, vals, context)
+        
+        return record
+    
+    def get_product_category_account(self,cr, uid, categ_id, fieldname,context=None):
+        if context is None:
+            context = {}
+        categ_brw=self.pool.get('product.category').browse(cr, uid, categ_id, context=context)
+        account_id = getattr(categ_brw,fieldname) and getattr(categ_brw,fieldname).id or False
+        if not account_id and categ_brw.parent_id:
+            account_id = self.get_product_category_account(cr, uid, categ_brw.parent_id.id, fieldname,context=context)
+        return account_id
+        
+sale_order_line()
+
+class stock_picking(osv.osv):
+    _inherit = "stock.picking"
+    
+    _order = "id desc"
+    
+stock_picking()
+#~ 
+class stock_move(osv.osv):
+    _inherit = "stock.move"
+    
+        
+stock_move()
+
+
+class account_invoice(osv.osv):
+    _inherit = "account.invoice"
+    
+    
+    def validar_concept_id_account_invoice_line(self, cr, uid, ids):
+        """Funcion para validar que la factura no se le apruebe si unas de las
+        lineas de la factura no tiene retencion asociada al menos que sea una factura de venta."""
+        ai_brw = self.browse(cr, uid, ids)
+        if ai_brw[0].type not in ('out_invoice','out_refund'):
+            for ail in ai_brw[0].invoice_line:
+                if not ail.concept_id :
+                    raise osv.except_osv(_('Error con Retenciones'),_("Debe registrar el tipo de retencion en cada linea de la factura."))
+        return True
+        
+ 
+    def action_date_assign(self, cr, uid, ids, *args):
+        #Se hereda la función action_date_assign para llamar funcion de validacion
+        self.validar_diario_ventas(cr, uid, ids)
+        self.validar_concept_id_account_invoice_line(cr, uid, ids)
+        return super(account_invoice, self).action_date_assign(cr, uid, ids, args)
+    
+    
+    _columns = {
+        'sale_ids': fields.many2many('sale.order', 'sale_order_invoice_rel', 'invoice_id', 'order_id', 'Sale Orders', help='This is the list of sale orders that generated this invoice'),
+        'address_shipping_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True, states={'draft':[('readonly',False)]}),
+    }
+    
+    def onchange_partner_id(self, cr, uid, ids, type, partner_id,\
+            date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
+        
+        result = super(account_invoice, self).onchange_partner_id(cr, uid, ids, type, partner_id, date_invoice, payment_term, partner_bank_id, company_id)
+        
+        partner = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['delivery'])
+        shipping_addr_id = partner['delivery']
+        
+        result['value']['address_shipping_id'] = shipping_addr_id
+        
+        return result
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        
+        res = super(account_invoice, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+        
+        type_inv = context.get('type', 'out_invoice')
+        
+        if type_inv in ('out_invoice','out_refund') and uid != 1:
+            #Filtrar journal de acuerdo al usuario conectado y sus permisos en ubicaciones
+            jour_user = []
+            journal_obj = self.pool.get('account.journal')
+            
+            jour_user = self.lista_journal_permitidos(cr, uid)
+
+            if res.get('fields', False) and res['fields'].get('journal_id', False):
+                type = context.get('journal_type', 'sale')
+                for field in res['fields']:
+                    if field == 'journal_id':
+                        journal_select = journal_obj._name_search(cr, uid, '', [('type', '=', type),('id','in',jour_user)], context=context, limit=None, name_get_uid=1)
+                        if journal_select:
+                            res['fields'][field]['selection'] = journal_select
+
+        return res
+    
+    #Se sobreescribe split_invoice mientras no se registre el origen a la factura creada en la ovl.
+    #Tomada de la version 689 de ovl/6.0
+    def split_invoice(self, cr, uid, ids):
+        '''
+        Split the invoice when the lines exceed the maximum set for the company
+        '''
+        for inv in self.browse(cr, uid, ids):
+            inv_id =False
+            if inv.company_id.lines_invoice < 1:
+                raise osv.except_osv(_('Error !'), _('Please set an invoice lines value in:\nAdministration->Company->Configuration->Invoice lines'))
+            if inv.type in ["out_invoice","out_refund"]:
+                if len(inv.invoice_line)> inv.company_id.lines_invoice:
+                    lst = []
+                    invoice = self.read(cr, uid, inv.id, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'address_contact_id', 'address_invoice_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line', 'journal_id', 'period_id','user_id','origin'])
+                    invoice.update({
+                        'state': 'draft',
+                        'number': False,
+                        'invoice_line': [],
+                        'tax_line': [],
+                    })
+                    # take the id part of the tuple returned for many2one fields
+                    for field in ('address_contact_id', 'address_invoice_id', 'partner_id',
+                            'account_id', 'currency_id', 'payment_term', 'journal_id', 'period_id','user_id'):
+                        invoice[field] = invoice[field] and invoice[field][0]
+                    
+                    if hasattr(inv,'sale_ids'):
+                        if self.browse(cr,uid,inv.id,context={}).sale_ids:
+                            invoice.update({
+                                'sale_ids':[(6,0,[i.id for i in self.browse(cr,uid,inv.id,context={}).sale_ids])]
+                            })
+                        
+                    inv_id = self.create(cr, uid, invoice)
+                    cont = 0
+                    lst = inv.invoice_line
+                    while cont < inv.company_id.lines_invoice:
+                        lst.pop(0)
+                        cont += 1
+                    for il in lst:
+                        self.pool.get('account.invoice.line').write(cr,uid,il.id,{'invoice_id':inv_id})
+                    self.button_compute(cr, uid, [inv.id], set_total=True)
+            if inv_id:
+                wf_service = netsvc.LocalService("workflow")
+                self.button_compute(cr, uid, [inv_id], set_total=True)
+#                wf_service.trg_validate(uid, 'account.invoice', inv_id, 'invoice_open', cr)
+        return True
+        
+    def action_move_create(self, cr, uid, ids, *args):
+        """Agregar validacion para que no se venda varias veces el mismo imei """
+        res = super(account_invoice, self).action_move_create(cr, uid, ids, args)
+        return res
+        
+account_invoice()
+
+
+class account_invoice_line(osv.osv):
+    _inherit = "account.invoice.line"
+    
+    def get_product_category_account(self,cr, uid, categ_id, fieldname,context=None):
+        if context is None:
+            context = {}
+        categ_brw=self.pool.get('product.category').browse(cr, uid, categ_id, context=context)
+        account_id = getattr(categ_brw,fieldname) and getattr(categ_brw,fieldname).id or False
+        if not account_id and categ_brw.parent_id:
+            account_id = self.get_product_category_account(cr, uid, categ_brw.parent_id.id, fieldname,context=context)
+        return account_id
+    
+    def move_line_get(self, cr, uid, invoice_id, context=None):
+        res = []
+        res = super(account_invoice_line,self).move_line_get(cr, uid, invoice_id, context=context)
+        return res
+        
+account_invoice_line()
+
+
+class account_journal(osv.osv):
+    _inherit = "account.journal"
+    
+    
+    _columns = {
+        'sale_shop_id': fields.many2one('sale.shop', 'Sucursal Asociada'), 
+    }
+     
+account_journal()
+
+
+
+
+
+

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+   <!--
+        Journal
+-->
+        
+        <record id="sisb_ccs_sequence_sale_journal" model="ir.sequence">
+            <field name="name">CCS Sale Journal</field>
+            <field name="code">account.invoice.out_invoice</field>
+            <field eval="6" name="padding"/>
+            <field eval="100" name="number_next"/>
+            <field name="prefix">VTA_CCS/%(year)s/</field>
+        </record>
+        
+        <record id="sisb_planta_sequence_sale_journal" model="ir.sequence">
+            <field name="name">PLANTA Sale Journal</field>
+            <field name="code">account.invoice.out_invoice</field>
+            <field eval="6" name="padding"/>
+            <field eval="2000" name="number_next"/>
+            <field name="prefix">VTA_PLANTA/%(year)s/</field>
+        </record>
+        
+        <record id="sisb_ccs_sequence_sale_refund_journal" model="ir.sequence">
+            <field name="name">CCS Sale Refund Journal</field>
+            <field name="code">account.invoice.out_refund</field>
+            <field eval="6" name="padding"/>
+            <field eval="100" name="number_next"/>
+            <field name="prefix">NC_VTA_CCS/%(year)s/</field>
+        </record>
+        
+        <record id="sisb_planta_sequence_sale_refund_journal" model="ir.sequence">
+            <field name="name">PLANTA Sale Refund Journal</field>
+            <field name="code">account.invoice.out_refund</field>
+            <field eval="6" name="padding"/>
+            <field eval="2000" name="number_next"/>
+            <field name="prefix">NC_VTA_PLANTA/%(year)s/</field>
+        </record>
+        
+        
+        <record forcecreate="1" id="sisb_sale_journal_ccs" model="account.journal">
+            <field name="name">Diario de Ventas Caracas</field>
+            <field name="code">D-VTA-CCS</field>
+            <field name="type">sale</field>
+            <field name="view_id" ref="account.account_journal_view"/>
+            <field name="sequence_id" ref="sisb_ccs_sequence_sale_journal"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+        
+        <record forcecreate="1" id="sisb_sale_journal_planta" model="account.journal">
+            <field name="name">Diario de Ventas Planta</field>
+            <field name="code">D-VTA-PLANTA</field>
+            <field name="type">sale</field>
+            <field name="view_id" ref="account.account_journal_view"/>
+            <field name="sequence_id" ref="sisb_planta_sequence_sale_journal"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+        
+        <record forcecreate="1" id="sisb_sale_refund_journal_ccs" model="account.journal">
+            <field name="name">Diario de NC Caracas</field>
+            <field name="code">D-VTA-NC-CCS</field>
+            <field name="type">sale_refund</field>
+            <field eval="True" name="refund_journal"/>
+            <field name="view_id" ref="account.account_sp_refund_journal_view"/>
+            <field name="sequence_id" ref="sisb_ccs_sequence_sale_refund_journal"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+        
+        <record forcecreate="1" id="sisb_sale_refund_journal_planta" model="account.journal">
+            <field name="name">Diario de NC Planta</field>
+            <field name="code">D-VTA-NC-PLANTA</field>
+            <field name="type">sale_refund</field>
+            <field eval="True" name="refund_journal"/>
+            <field name="view_id" ref="account.account_sp_refund_journal_view"/>
+            <field name="sequence_id" ref="sisb_planta_sequence_sale_refund_journal"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+        
+    </data>
+</openerp>

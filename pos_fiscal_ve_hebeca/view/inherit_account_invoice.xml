@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="account_fiscal_pos_ve_form" model="ir.ui.view">
+            <field name="name">account.fiscal.pos.ve.form</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="/form/notebook/page[@string='Invoice']/group/group" position="after">
+                    <button name="execute_commands" type='object' string='Imprimir Documento Fiscal' icon="gtk-execute" attrs="{'invisible': [('fiscal_voucher','=','True')] }" confirm="¿En realidad desea Imprimir por la impresora fiscal?"/>
+                </xpath>
+                 <xpath expr="/form/notebook/page[@string='Invoice']/group" position="after">
+                    <group col="1" colspan="2">
+                        <field name="account_invoice_payments_lines_ids" nolabel="1">
+                            <tree editable="bottom" string="Tipos de Pagos">
+                                <field name="type_id"/>
+                                <field name="amount" />
+                            </tree>
+                        </field>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+        <record id="account_tax_fiscal_pos_ve_form" model="ir.ui.view">
+            <field name="name">account.tax.fiscal.pos.ve.form</field>
+            <field name="model">account.tax</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="/form/notebook/page[@string='Tax Definition']/group/field[@name='amount']" position="after">
+                    <field name="print_character" />
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</openerp>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <record model="ir.ui.view" id="product_add_page_form">
+        <field name="name">product_add_page_form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/group/group/separator[@string='Characteristics']" position="after">
+                    <field name="type_phone"/>
+            </xpath>
+            <xpath expr="/form/notebook/page[@string='Information']" position="before">
+                <page string="Lineas de Productos">
+                    <field name="product_ids" nolabel="1" colspan='4'>
+                        <tree readonly='1' noeditable="1" colors="green:status=='Disponible';red:status=='Vendido';red:status=='Cambiado';red:status=='Devuelto';gray:status=='Dañado';black:status=='Nota de credito';blue:status=='Reparado'">
+                            <field name="imei_code"/>
+                            <field name="status"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_del_standard_price_tree">
+        <field name="name">product_del_standard_price_tree</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="/tree/field[@name='standard_price']" position="replace">
+                <field name="standard_price" groups="base.group_extended"/>
+            </xpath>
+        </field>
+    </record>
+
+<!--
+    <record model="ir.ui.view" id="product_del_standard_price_form">
+        <field name="name">product_del_standard_price_form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/notebook/page[@string='Information']/group/view/field[@name='standard_price']/group/field[@name='standard_price']" position="replace">
+                <field name="standard_price" groups="base.group_extended"/>
+            </xpath>
+        </field>
+    </record>
+-->
+
+    </data>
+</openerp>

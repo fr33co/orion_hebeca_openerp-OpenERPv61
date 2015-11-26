@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_recepcion_order_tree" model="ir.ui.view">
+            <field name="name">rma.recepcion.tree</field>
+            <field name="model">rma.recepcion</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Orden de recepcion">
+                    <field name="name" select="1" />
+                    <field name="invoice_id" select="1" />
+                    <field name="date_recepcion" select="1" />
+                    <field name="status_warranty" />
+                    <field name="partner_id" readonly='1' select="1" />
+                    <field name="imei_id" readonly='1'/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_recepcion_order_form" model="ir.ui.view">
+            <field name="name">rma.recepcion.form</field>
+            <field name="model">rma.recepcion</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Orden de recepcion">
+                    <group col="6" colspan="4">
+                        <field name="name" readonly='1'/>
+                        <field name="invoice_id"/>
+                        <field name="date_recepcion" readonly='1'/>
+                        <field name="status_warranty" readonly='1'/>
+                        
+                        <group col="6" colspan="2">
+                            <button icon = "gtk-go-forward" name = "status_warranty" string = "Chequeo de Garantia" type = "object"/>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Verificacion del Producto">
+                                <field name="bateria" />
+                                <field name="cargador" />
+                                <field name="manos_libres" />
+                                <field name="manual" />
+                                <field name="cable_usd" />
+                                <field name="audifonos" />
+                                <field name="microsd" />
+                                <field name="otros" />
+                                <newline/>
+                                <separator colspan="4" string="Informacion extra de los componentes del producto"/>
+                                <field name="informacion_extra" nolabel="1" colspan="4"/>
+                                <group col="6" colspan="2">
+                                    <field name="is_correct" required='1'/>
+                                </group>
+                            </page>
+                            <page string="Informacion especifica del Producto">
+                                <field name="origin" readonly='1'/>
+                                <field name="internal_number" readonly='1'/>
+                                <field name="partner_id" readonly='1'/>
+                                <field name="address_invoice_id" readonly='1'/>
+                                <field name="tlf_contacto" />
+                                <field name="imei_id" readonly='1'/>
+                                <separator colspan="4" string="Falla presentadas por el producto"/>
+                                <field name="falla" nolabel="1" colspan="4"/>
+                                <newline/>
+                                <separator colspan="4" string="Asistentes"/>
+                                <group col="6" colspan="2">
+                                    <button icon = "gtk-go-forward" name = "return_button" string = "Recibir o retornar producto" type = "object"/>
+                                    <button icon = "gtk-go-forward" name = "return_invoice" string = "Recibir o retornar producto" type = "object" confirm='Al realizar este proceso la factura se cancelara con una nota de credito, esta seguro de realizarlo?'/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_recepcion_order_tree" model="ir.actions.act_window">
+            <field name="name">Orden de Recepcion</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">rma.recepcion</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+        id = 'rma_invorion_menu'
+        name = 'Gestion de RMA'
+        sequence = '50'
+        icon = 'STOCK_FLOPPY'
+        web_icon = "images/rma_logo.png"
+        web_icon_hover = "images/rma_logo-hover.png"
+        />
+
+        <menuitem
+        id = 'rma_recepcion_menu'
+        name = 'Recepcion'
+        sequence = '51'
+        parent = 'rma_invorion_menu'
+        />
+
+        <menuitem
+        action="action_recepcion_order_tree"
+        id="menu_recepcion_order"
+        parent="rma_recepcion_menu"
+        name="Orden de recepcion"
+        sequence="60"
+        />
+
+    </data>
+</openerp>

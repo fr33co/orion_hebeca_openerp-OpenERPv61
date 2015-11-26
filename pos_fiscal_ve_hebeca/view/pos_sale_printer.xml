@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="pos_sale_printer_form">
+            <field name="name">pos.sale.printer.form</field>
+            <field name="model">pos.sale.printer</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Configuracion de Impresoras Fiscales">
+                    <group colspan="4" col="4">
+                    <field name="name" />
+                    <field name="ip_address" />
+                    <field name="machine_user" />
+                    <field name="machine_pass" password="True"/>
+                    <field name="ssh_port" />
+                    <field name="command" />
+                    <field name="local_dir" />
+                    <field name="upload_dir" />
+                    <field name="state" />
+                    </group>
+                    <group colspan="4" col="4">
+                    <button name="online_fiscal_point" type="object" string="Activar Impresora" icon="gtk-execute"/>
+                    <button name="offline_fiscal_point" type="object" string="Desactivar Impresora" icon="gtk-cancel"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="pos_sale_printer_tree">
+            <field name="name">pos.sale.printer.tree</field>
+            <field name="model">pos.sale.printer</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Configuracion de Impresoras Fiscales">
+                    <field name="name" />
+                    <field name="ip_address" />
+                    <field name="state" />
+                    <button name="online_fiscal_point" type="object" string="Activar Impresora" icon="gtk-execute"/>
+                    <button name="offline_fiscal_point" type="object" string="Desactivar Impresora" icon="gtk-cancel"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="pos_sale_printer">
+            <field name="name">Configuración de Impresora Fiscal</field>
+            <field name="res_model">pos.sale.printer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+
+
+     <menuitem name="Impresoras Fiscales" parent="account.menu_finance_configuration" id="menu_point_fiscal_printers" sequence="21" />
+     <menuitem name="Configurar Impresoras Fiscales" parent="menu_point_fiscal_printers" id="menu_conf_point_fiscal_printers" sequence="21"  action="pos_sale_printer"/>
+    
+    <record model="ir.ui.view" id="account_invoice_payment_types_form">
+        <field name="name">account.invoice.payment.types.form</field>
+        <field name="model">account.invoice.payment.types</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Tipos de Pagos">
+                <group colspan="4" col="4">
+                    <field name="name" required="True"/>
+                    <field name="journal_id" required="True"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="account_invoice_payment_types_tree">
+            <field name="name">account.invoice.payment.types.tree</field>
+            <field name="model">account.invoice.payment.types</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Configuracion de Tipos de Pagos">
+                    <field name="name" />
+                    <field name="journal_id"/>
+                </tree>
+            </field>
+        </record>
+        
+    <record model="ir.actions.act_window" id="action_account_invoice_payment_types">
+            <field name="name">Configuración de Tipos de Pagos</field>
+            <field name="res_model">account.invoice.payment.types</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+    </record>
+    
+    
+    <menuitem name="Tipos de Pagos" parent="account.menu_finance_configuration" id="menu_account_invoice_payment_types" sequence="28" />
+    <menuitem name="Configurar Tipos de Pagos" parent="menu_account_invoice_payment_types" id="menu_conf_account_invoice_payment_types" sequence="28"  action="action_account_invoice_payment_types"/>
+    
+    </data>
+</openerp>
+

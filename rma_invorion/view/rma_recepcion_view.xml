@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+<!--
+RECEPCION
+-->
+
+        <record id="view_recepcion_order_tree" model="ir.ui.view">
+            <field name="name">rma.recepcion.tree</field>
+            <field name="model">rma.recepcion</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Orden de recepcion">
+                    <field name="name" select="1" />
+                    <field name="state" select="1"/>
+                    <field name="claim_origine" select="1"/>
+                    <field name="invoice_id" select="1" />
+                    <field name="date_recepcion" select="1" />
+                    <field name="date_warranty" select="1" />
+                    <field name="status_warranty" />
+                    <field name="applicable_guarantee" />
+                    <field name="customer_id"/>
+                    <field name="imei_id"/>
+                    <field name="imei_id_exchange"/>
+                    <field name="responsible_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_recepcion_order_form" model="ir.ui.view">
+            <field name="name">rma.recepcion.form</field>
+            <field name="model">rma.recepcion</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Orden de recepcion">
+                    <group col="6" colspan="4">
+                        <separator colspan="6" string="Informacion relacionada a la garantia"/>
+                        <field name="name" readonly='1'/>
+                        <field name="date_recepcion" readonly='1'/>
+                        <field name="date_warranty" readonly='1'/>
+                        <field name="status_warranty" readonly='1'/>
+                        <field name="state"/>
+                        <field name="claim_origine"/>
+                        <field name="applicable_guarantee"/>
+                        <group col="6" colspan="2">
+                            <button icon = "gtk-go-forward" name = "status_warranty" string = "Chequeo de Garantia" type = "object"/>
+                        </group>
+                        <separator colspan="6" string="Informacion relacionada a contabilidad"/>
+                        <field name="invoice_id" domain="[('invoice_refund','=',False),('type','not in',['out_refund','in_refund'])]"/>
+                        <field name="internal_number" readonly='1'/>
+                        <field name="journal_id" readonly='1' domain="[('type','in',['sale_refund','purchase_refund'])]"/>
+                        <field name="responsible_id"/>
+                        <separator colspan="6" string="Informacion relacionada al producto y fallas"/>
+                        <notebook colspan="4">
+                            <page string="Verificacion del Producto">
+                                <field name="bateria" />
+                                <field name="cargador" />
+                                <field name="manos_libres" />
+                                <field name="manual" />
+                                <field name="cable_usd" />
+                                <field name="audifonos" />
+                                <field name="microsd" />
+                                <field name="otros" />
+                                <newline/>
+                                <separator colspan="4" string="Informacion extra de los componentes del producto"/>
+                                <field name="informacion_extra" nolabel="1" colspan="4"/>
+                                <group col="6" colspan="2">
+                                    <field name="is_correct" required='1'/>
+                                </group>
+                            </page>
+                            <page string="Informacion especifica del Producto">
+                                <field name="origin" readonly='1'/>
+                                <field name="product" readonly='1'/>
+                                <field name="customer_id" readonly='1'/>
+                                <field name="address_invoice_id" readonly='1'/>
+                                <field name="imei_id" readonly='1'/>
+                                <field name="tlf_contacto" />
+                                <separator colspan="4" string="Falla presentadas por el producto"/>
+                                <field name="falla" nolabel="1" colspan="4"/>
+                                <newline/>
+                                <separator colspan="4" string="Asistentes"/>
+                                <group col="6" colspan="2">
+                                    <button icon = "gtk-go-forward" name = "return_product" string = "Recibir producto" type = "object"/>
+                                    <button icon = "gtk-go-forward" name = "change_product" string = "Cambiar producto" type = "object"/>
+                                    <button icon = "gtk-go-forward" name = "return_invoice" string = "Cancelar factura" type = "object" confirm='Al realizar este proceso la factura se cancelara con una nota de credito, esta seguro de realizarlo?'/>
+                                </group>
+                            </page>
+                            <page string="Cambios realizados de productos">
+                                <field name="product_id_exchange" readonly='1'/>
+                                <field name="imei_id_exchange" readonly='1'/>
+                            </page>
+                        </notebook>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_recepcion_order_tree" model="ir.actions.act_window">
+            <field name="name">Orden de Recepcion</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">rma.recepcion</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+<!--
+ENVIO        
+-->
+
+        <record id="view_envio_order_tree" model="ir.ui.view">
+            <field name="name">rma.envio.tree</field>
+            <field name="model">rma.envio</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Orden de Envio">
+                    <field name="rma_reference"/>
+                    <field name="repair_state" select='1'/>
+                    <field name="date_recepcion" select='1'/>
+                    <field name="date_sendtoreopair"/>
+                    <field name="supplier_id" select='1'/>
+                    <field name="origin"/>
+                    <field name="invoice_supplier_id"/>
+                    <field name="imei_id"/>
+                </tree>
+            </field>
+        </record>
+
+       <record id="view_envio_order_form" model="ir.ui.view">
+            <field name="name">rma.envio.form</field>
+            <field name="model">rma.envio</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Orden de Envio">
+                    <separator colspan="6" string="Informacion relacionada al RMA"/>
+                    <field name="rma_reference" readonly='1'/>
+                    <field name="repair_state" readonly='1'/>
+                    <field name="date_recepcion" readonly='1'/>
+                    <field name="date_sendtoreopair" readonly='1'/>
+                    <separator colspan="6" string="Informacion relacionada al proveedor"/>
+                    <field name="supplier_id" readonly='1'/>
+                    <field name="origin" readonly='1'/>
+                    <field name="invoice_supplier_id" readonly='1'/>
+                    <field name="address_invoice_id_supplier" readonly='1'/>
+                    <separator colspan="6" string="Informacion relacionada al comprador"/>
+                    <field name="imei_id" readonly='1'/>
+                    <field name="date_repaired" readonly='1'/>
+                    <group col="6" colspan="2">
+                        <button icon = "gtk-go-forward" name = "product_repaired" string = "¿Producto Reparado?" type = "object"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Informacion de la falla">
+                            <separator colspan="4" string="Proporcionado por el cliente"/>
+                            <field name="falla_cliente" nolabel="1" colspan="4"/>
+                            <newline/>
+                            <separator colspan="4" string="Proporcionado por el responsable"/>
+                            <field name="falla_responsable" nolabel="1" colspan="4"/>
+                            <newline/>
+                            <separator colspan="4" string="Asistentes"/>
+                            <group col="6" colspan="2">
+                                <button icon = "gtk-go-forward" name = "send_torepair" string = "Enviar a reparacion" type = "object"/>
+                                <button icon = "gtk-go-forward" name = "change_product" string = "Cambiar producto" type = "object"/>
+                                <button icon = "gtk-go-forward" name = "return_invoice" string = "Cancelar factura" type = "object" confirm='Al realizar este proceso la factura se cancelara con una nota de credito, esta seguro de realizarlo?'/>
+                            </group>
+                        </page>
+                        <page string="Seguimiento e Historial">
+                            <field name="historial_ids" nolabel="1" colspan='4'>
+                                <tree>
+                                    <field name="date_historial"/>
+                                    <field name="info"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_envio_order_tree" model="ir.actions.act_window">
+            <field name="name">Orden de Envio</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">rma.envio</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+<!--
+HISTORIAL
+-->
+
+       <record id="view_historial_form" model="ir.ui.view">
+            <field name="name">rma.historial.form</field>
+            <field name="model">rma.historial</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Historial y seguimiento">
+                    <field name="short_title"/>
+                    <field name="responsible_id"/>
+                    <field name="date_historial"/>
+                    <group col="6" colspan="4">
+                        <separator colspan="4" string="Informacion"/>
+                        <field name="info" nolabel='1' colspan="4"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+       <record id="view_historial_tree" model="ir.ui.view">
+            <field name="name">rma.historial.tree</field>
+            <field name="model">rma.historial</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <form string="Historial y seguimiento">
+                    <field name="date_historial"/>
+                    <field name="responsible_id"/>
+                    <field name="short_title"/>
+                </form>
+            </field>
+        </record>
+
+<!--
+MENU
+-->
+        
+        <menuitem
+        id = 'rma_invorion_menu'
+        name = 'Gestion de RMA'
+        sequence = '50'
+        icon = 'STOCK_FLOPPY'
+        web_icon = "images/rma_logo.png"
+        web_icon_hover = "images/rma_logo-hover.png"
+        />
+
+        <menuitem
+        id = 'rma_recepcion_menu'
+        name = 'Recepcion y envio'
+        sequence = '51'
+        parent = 'rma_invorion_menu'
+        />
+
+        <menuitem
+        action="action_recepcion_order_tree"
+        id="menu_recepcion_order"
+        parent="rma_recepcion_menu"
+        name="Recepcion (Clientes)"
+        sequence="60"
+        />
+
+        <menuitem
+        action="action_envio_order_tree"
+        id="menu_envio_order"
+        parent="rma_recepcion_menu"
+        name="Envio (Proveedores)"
+        sequence="61"
+        />
+
+    </data>
+</openerp>

@@ -1,0 +1,337 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* sisb_ventas
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0.3\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-11-07 23:15+0000\n"
+"PO-Revision-Date: 2012-11-07 18:56-0400\n"
+"Last-Translator: sisb <afuentes@industriasdiana.gob.ve>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+
+#. module: sale
+#: field:sale.shop,name:0
+msgid "Shop Name"
+msgstr "Nombre sucursal"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_shop_form
+#: model:ir.ui.menu,name:sale.menu_action_shop_form
+#: field:sale.order,shop_id:0
+#: view:sale.report:0
+#: field:sale.report,shop_id:0
+msgid "Shop"
+msgstr "Sucursal"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_shop_form
+msgid "If you have more than one shop reselling your company products, you can create and manage that from here. Whenever you will record a new quotation or sales order, it has to be linked to a shop. The shop also defines the warehouse from which the products will be delivered for each particular sales."
+msgstr "Si tiene más de una sucursal donde vende los productos de su compañía, puede crearlas y gestionarlas desde aquí. Cada vez que codifique un nuevo presupuesto o pedido de venta, debe estar vinculado a una sucursal. La sucursal también define desde que almacén serán entregados los productos para cada venta."
+
+#. module: sisb_ventas
+#: view:sisb.sale.order.wizard:0
+msgid "Permitir aprobar el Presupuesto"
+msgstr "Permitir aprobar el Presupuesto"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/wizard/sisb_sale_order_wizard.py:59
+#, python-format
+msgid "Hubo problemas en el proceso forzar la aprobación del presupuesto, contactar al administrador del sistema."
+msgstr "Hubo problemas en el proceso forzar la aprobación del presupuesto, contactar al administrador del sistema."
+
+#. module: sisb_ventas
+#: model:ir.model,name:sisb_ventas.model_sisb_sale_order_wizard
+msgid "Force Confirm Sale Order"
+msgstr "Forzar Confirmar el Pedido de Venta"
+
+#. module: sisb_ventas
+#: field:sale.shop,refund_journal_id:0
+msgid "Journal Refund"
+msgstr "Diario de rectificación"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:245
+#, python-format
+msgid "Hubo problemas en el proceso de actualizar la planificacion del pedido de venta !. No esta asociado el primer albaran en el abastecimiento."
+msgstr "Hubo problemas en el proceso de actualizar la planificación del pedido de venta !. No esta asociado el primer albarán en el abastecimiento."
+
+#. module: sisb_ventas
+#: model:ir.model,name:sisb_ventas.model_sale_order_line_make_invoice
+msgid "Sale OrderLine Make_invoice"
+msgstr "Venta Línea_pedido Realizar_factura"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/wizard/sisb_sale_order_wizard.py:59
+#, python-format
+msgid "mensaje_usuario"
+msgstr "mensaje_usuario"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:44
+#, python-format
+msgid "Hubo error en el proceso de creacion de la secuencia. Contactar el administrador!"
+msgstr "Hubo error en el proceso de creación de la secuencia. Contactar el administrador!"
+
+#. module: sisb_ventas
+#: field:sale.shop,journal_id:0
+msgid "Journal Sale"
+msgstr "Diario de Venta"
+
+#. module: sisb_ventas
+#: model:ir.model,name:sisb_ventas.model_stock_picking
+msgid "Picking List"
+msgstr "Albarán"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:110
+#, python-format
+msgid "No hay existencia suficiente para procesar el pedido!"
+msgstr "No hay existencia suficiente para procesar el pedido!"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/wizard/sisb_sale_sale_make_invoice.py:42
+#: code:addons/sisb_ventas/wizard/sisb_sale_stock_invoice_onshipping.py:53
+#, python-format
+msgid "Warning !"
+msgstr "Warning !"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:251
+#, python-format
+msgid "Hubo problemas en el proceso de actualizar la planificacion del pedido de venta !. Revisar nombre del pedido o los albaranes creados."
+msgstr "Hubo problemas en el proceso de actualizar la planificación del pedido de venta !. Revisar nombre del pedido o los albaranes creados."
+
+#. module: sisb_ventas
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique !"
+msgstr "¡La referencia del pedido debe ser única!"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:71
+#: code:addons/sisb_ventas/model/sisb_ventas.py:87
+#: code:addons/sisb_ventas/model/sisb_ventas.py:110
+#: code:addons/sisb_ventas/model/sisb_ventas.py:374
+#: code:addons/sisb_ventas/model/sisb_ventas.py:395
+#, python-format
+msgid "Error !"
+msgstr "Error !"
+
+#. module: sisb_ventas
+#: field:sisb.log.forzar.presupuesto,order_id:0
+msgid "Pedido de Venta"
+msgstr "Pedido de Venta"
+
+#. module: sisb_ventas
+#: view:sisb.sale.order.wizard:0
+msgid "Convertir a pedido de Venta"
+msgstr "Convertir a pedido de Venta"
+
+#. module: sisb_ventas
+#: model:ir.actions.act_window,name:sisb_ventas.sisb_action_force_confirm
+msgid "Forzar Confirmar"
+msgstr "Forzar Confirmar"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:71
+#, python-format
+msgid "Por favor ingresar las líneas del pedido de venta antes de continuar!"
+msgstr "Por favor ingresar las líneas del pedido de venta antes de continuar!"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:28
+#, python-format
+msgid "La politica de facturacion no puede ser factura desde albaran!"
+msgstr "La política de facturación no puede ser factura desde albarán!"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:57
+#, python-format
+msgid "Acción Denegada!"
+msgstr "Acción Denegada!"
+
+#. module: sisb_ventas
+#: view:sale.order:0
+msgid "Sucursal"
+msgstr "Sucursal"
+
+#. module: sisb_ventas
+#: view:sale.order:0
+msgid "Documento Cliente"
+msgstr "Documento Cliente"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:190
+#, python-format
+msgid "There were problems in the process"
+msgstr "Hubo problemas en el proceso"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:396
+#, python-format
+msgid "There is no income category account defined in default Properties for Product Category or Fiscal Position is not defined !"
+msgstr "No hay una Cuenta de tipo Ingreso definida por defecto en el producto ni en el árbol de su categoría o la Posición Fiscal no está definida!"
+
+#. module: sisb_ventas
+#: field:sisb.log.forzar.presupuesto,responsable_uid:0
+msgid "Responsable de forzar el confirmar el presupuesto"
+msgstr "Responsable de forzar el confirmar el presupuesto"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:247
+#, python-format
+msgid "Hubo problemas en el proceso de actualizar la planificacion del pedido de venta !. Hay más de un stock move que lo precede."
+msgstr "Hubo problemas en el proceso de actualizar la planificación del pedido de venta !. Hay más de un movimiento de inventario que lo precede."
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:245
+#: code:addons/sisb_ventas/model/sisb_ventas.py:247
+#: code:addons/sisb_ventas/model/sisb_ventas.py:249
+#: code:addons/sisb_ventas/model/sisb_ventas.py:251
+#, python-format
+msgid "Invalid action !"
+msgstr "Acción inválida !"
+
+#. module: sisb_ventas
+#: model:ir.model,name:sisb_ventas.model_sale_shop
+msgid "Sales Shop"
+msgstr "Sucursales"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/wizard/sisb_sale_sale_line_invoice.py:48
+#, python-format
+msgid "No se puede facturar desde esta opcion!"
+msgstr "No se puede facturar desde esta opción!"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:24
+#: code:addons/sisb_ventas/model/sisb_ventas.py:28
+#: code:addons/sisb_ventas/model/sisb_ventas.py:44
+#: code:addons/sisb_ventas/model/sisb_ventas.py:190
+#: code:addons/sisb_ventas/model/sisb_ventas.py:310
+#, python-format
+msgid "Error!"
+msgstr "Error!"
+
+#. module: sisb_ventas
+#: view:sale.order:0
+msgid "Force Confirm"
+msgstr "Forzar Aprobar"
+
+#. module: sisb_ventas
+#: model:ir.model,name:sisb_ventas.model_stock_invoice_onshipping
+msgid "Stock Invoice Onshipping"
+msgstr "Factura de envío de mercancías"
+
+#. module: sisb_ventas
+#: model:ir.model,name:sisb_ventas.model_sisb_log_forzar_presupuesto
+msgid "Log Force Confirm Sale Order"
+msgstr "Mensaje de Forzar Confirmar el Pedido de Venta"
+
+#. module: sisb_ventas
+#: model:ir.model,name:sisb_ventas.model_sale_make_invoice
+msgid "Sales Make Invoice"
+msgstr "Ventas. Realizar factura"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:375
+#, python-format
+msgid "There is no income account defined for this product: \"%s\" (id:%d)"
+msgstr "No hay una cuenta de ingreso definida para este producto: \"%s\" (id:%d)"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:24
+#, python-format
+msgid "Debe indicar la politica de envio completo!"
+msgstr "Debe indicar la política de envío completo!"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:57
+#, python-format
+msgid "No se permite duplicar Pedidos!"
+msgstr "No se permite duplicar Pedidos!"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:87
+#, python-format
+msgid "No se puede procesar el pedido. No hay producto asociado en alguna de las lineas.!"
+msgstr "No se puede procesar el pedido. No hay producto asociado en alguna de las lineas.!"
+
+#. module: sisb_ventas
+#: sql_constraint:sisb.log.forzar.presupuesto:0
+msgid "The order_id must be unique !"
+msgstr "El id de la orden debe ser única !"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/wizard/sisb_sale_stock_invoice_onshipping.py:53
+#, python-format
+msgid "Intenta facturar albaranes de diferentes sucursales. Por favor revisar!"
+msgstr "Intenta facturar albaranes de diferentes sucursales. Por favor revisar!"
+
+#. module: sisb_ventas
+#: help:sale.shop,picking_auto:0
+msgid "Utilizado en Pedidos de Venta. Si se activa, el sistema intentara procesar automaticamente el albaran de apartado si la ubicacion de salida del almacen esta encadenado a Clientes."
+msgstr "Utilizado en Pedidos de Venta. Si se activa, el sistema intentará procesar automáticamente el albarán de apartado si la ubicación de salida del almacén esta encadenado a Clientes."
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:310
+#, python-format
+msgid "Debe indicar el metodo de abastecimiento desde stock !"
+msgstr "Debe indicar el método de abastecimiento desde stock !"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/wizard/sisb_sale_sale_line_invoice.py:48
+#, python-format
+msgid "Warning"
+msgstr "Warning"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:169
+#, python-format
+msgid "Credit Over Limits !"
+msgstr "Supera el límite de crédito !"
+
+#. module: sisb_ventas
+#: field:sale.shop,picking_auto:0
+msgid "Albaran de apartado automatico"
+msgstr "Albarán de apartado automático"
+
+#. module: sisb_ventas
+#: view:sisb.sale.order.wizard:0
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: sisb_ventas
+#: field:sisb.log.forzar.presupuesto,motivo:0
+#: view:sisb.sale.order.wizard:0
+#: field:sisb.sale.order.wizard,motivo:0
+msgid "Motivo"
+msgstr "Motivo"
+
+#. module: sisb_ventas
+#: model:ir.model,name:sisb_ventas.model_sale_order
+msgid "Sales Order"
+msgstr "Pedido de venta"
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:269
+#, python-format
+msgid "Proceso incompleto. El albaran de apartado no se completo por existencias incompletas."
+msgstr "Proceso incompleto. El albarán de apartado no se completó por existencias incompletas."
+
+#. module: sisb_ventas
+#: code:addons/sisb_ventas/model/sisb_ventas.py:249
+#, python-format
+msgid "Hubo problemas en el proceso de actualizar la planificacion del pedido de venta !. Hubo diferencias en los albaranes creados."
+msgstr "Hubo problemas en el proceso de actualizar la planificación del pedido de venta !. Hubo diferencias en los albaranes creados."
+
+#. module: sisb_ventas
+#: model:ir.model,name:sisb_ventas.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea de orden de ventas"
+

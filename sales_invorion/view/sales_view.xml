@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+<!--
+        Facturas
+-->
+        
+        <record id="orion_account_invoice_nro_control_customer_form" model="ir.ui.view">
+            <field name="name">account.invoice.nro.control.customer.form</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="l10n_ve_fiscal_requirements.account_invoice_nro_control_customer_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page/group/field[@name='nro_ctrl']" position="replace">
+                    <field  name="nro_ctrl" attrs="{'required': [('type', 'not in', ('out_invoice','out_refund'))]}"/>
+                </xpath>
+            </field>
+        </record>
+        
+<!--
+        Se valida a nivel de codigo el concepto de retencion
+-->
+        
+        <record model="ir.ui.view" id="orion_view_invoice_line_form_islr">
+            <field name="name">account_invoice_line_concept_islr</field>
+            <field name="model">account.invoice.line</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="l10n_ve_withholding_islr.view_invoice_line_form_islr"/>
+            <field name="arch" type="xml">
+                <field name="concept_id" position="replace">
+                    <field name="concept_id" required="0"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="orion_view_invoice_line_tree_islr">
+            <field name="name">account_invoice_line_tree_concept_islr</field>
+            <field name="model">account.invoice.line</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="l10n_ve_withholding_islr.view_invoice_line_tree_islr"/>
+            <field name="arch" type="xml">
+                <field name="concept_id" position="replace">
+                    <field name="concept_id"  required="0"/>
+                </field>
+            </field>
+        </record>
+        
+<!--
+        Arbol y journal
+-->
+
+        <record id="action_invoice_tree1" model="ir.actions.act_window">
+            <field name="name">Customer Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('type','=','out_invoice')]</field>
+            <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="help">With Customer Invoices you can create and manage sales invoices issued to your customers. OpenERP can also generate draft invoices automatically from sales orders or deliveries. You should only confirm them before sending them to your customers.</field>
+        </record>
+        
+        <record id="action_invoice_tree3" model="ir.actions.act_window">
+            <field name="name">Customer Refunds</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('type','=','out_refund'),]</field>
+            <field name="context">{'type':'out_refund', 'journal_type': 'sale_refund'}</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="help">With Customer Refunds you can manage the credit notes for your customers. A refund is a document that credits an invoice completely or partially. You can easily generate refunds and reconcile them directly from the invoice form.</field>
+        </record>
+        
+        
+<!--
+        <record id="view_account_journal_form" model="ir.ui.view">
+            <field name="name">account.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page[@string='General Information']" position="inside">
+                    <group colspan="2" col="2">
+                    <separator string="Sucursal asociada para Ventas" colspan="4"/>
+                    <field  name="sale_shop_id" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+-->
+        
+        
+        <record id="invoice_form" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="move_id" position="after">
+                    <field colspan="4" name="address_shipping_id" domain="[('partner_id','=',partner_id)]" attrs="{'required': [('type', 'in', ('out_invoice','out_refund'))]}" groups="base.group_extended"/>
+                </field>
+            </field>
+        </record>
+        
+    </data>
+    
+
+
+</openerp>

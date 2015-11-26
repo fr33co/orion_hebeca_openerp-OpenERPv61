@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="return_product_wizard_confirm" model="ir.ui.view">
+            <field name="name">return.product.rma.wizard.form</field>
+            <field name="model">return.product.rma.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="¿Esta seguro de ejecutar esta accion?">
+                    <field name="product_id" readonly='1'/>
+                    <field name="imei_id" readonly='1'/>
+                    <separator colspan="6" string="Seleccione el producto y codigo imei a cambiar"/>
+                     <field name="product_id_exchange"/>
+                    <field name="imei_id_exchange" domain="[('status','=','Disponible'),('product_id', '=', product_id_exchange)]"/>
+                    <group col="6" colspan="4">
+                        <button icon = "gtk-cancel" special = "cancel" string = "No"/>
+                        <button icon = "gtk-ok" name = "change_product" string = "Yes" type = "object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_rma_invorion_return_product_rma_wizard" model="ir.actions.act_window">
+            <field name="name">Confirmacion de devolucion</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">return.product.rma.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
+
+    </data>
+</openerp>
